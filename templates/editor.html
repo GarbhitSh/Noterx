@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noterx</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+</head>
+<style>
+    .text{
+        color: blue;
+        font-weight: bold;
+        margin-top: -10%;
+        margin-left: 200px;
+        font-size: 30px;
+        font-family: 'Times New Roman', Times, serif;
+      }
+</style>
+ 
+<body>
+    <nav class="navbar is-white" > <!-- Changed header color to primary -->
+        <div class="navbar-brand">
+                
+            <a href="{% url 'editor' %}" class="navbar-item has-text-black ok" style="font-size: 25px; font-weight:bold; font-family:'Times New Roman', Times, serif; ">Notes</a>
+            <a href="{% url 'editor' %}?docid=0"  class="button is-primary" style=" font-weight:bold; font-family:'Times New Roman', Times, serif; margin-top:5%; margin-right:10px">New Note</a>
+ 
+            <a href="{% url 'logout' %}"  class="button is-danger" style=" font-weight:bold; font-family:'Times New Roman', Times, serif; margin-top:5%">Logout</a>
+ 
+ 
+          </div>
+        <div class="navbar-menu">
+             
+                
+             
+        </div>
+    </nav>
+    <hr>
+     
+    
+           
+    <section class="section">
+         
+        <div class="columns">
+            <div class="column is-2">
+                <aside class="menu">
+                    <p class="menu-label" style="font-size: 20px; font-weight:bold; font-family:'Times New Roman', Times, serif">Notes</p>
+                    <ul class="menu-list">
+                        {% for doc in notes %}
+                            <li>
+                                <a href="{% url 'editor' %}?docid={{ doc.id }}">{{ doc.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+            </div>
+ 
+            <div class="column is-5 mt-3 pt-4" >
+                <h3 class="text text-center"> Noterx </h3>
+                <br>
+                <div class="box" >
+                     
+                    <form method="post" action="{% url 'editor' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="docid" value="{{ docid }}">
+                        <div class="field">
+                            <label class="label" style="font-size: 22px; font-family:'Times New Roman', Times, serif">Title</label>
+                            <div class="control">
+                                <input type="text" class="input" name="title" placeholder="Title" {% if note %} value="{{ note.title }}"{% endif %}>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" style="font-size: 20px; font-family:'Times New Roman', Times, serif">Content</label>
+                            <div class="control">
+                                <textarea class="textarea" name="content" placeholder="Content">{% if note %}{{ note.content }}{% endif %}</textarea>
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-primary">Save</button>
+                            </div>
+                            {% if note %}
+                                <div class="control">
+                                    <a href="{% url 'delete_note' note.id %}" class="button is-danger">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
